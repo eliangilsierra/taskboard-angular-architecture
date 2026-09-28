@@ -1,0 +1,7 @@
+h2 {
+  margin-top: 0;
+}
+
+.tasks-page__summary {
+  color: var(--color-muted);
+}
