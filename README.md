@@ -1,6 +1,6 @@
 # Prueba
 
-> **Branch `taskboard/standard-error-handling`** — builds on `taskboard/layered-structure`. Every error, expected or not, now goes through one pipeline: `AppError` → `GlobalErrorHandler` → on-screen banner. Decisions: [ADR 0001](docs/adr/0001-upgrade-angular-17-to-22.md), [0002](docs/adr/0002-feature-based-layered-structure.md), [0003](docs/adr/0003-signal-based-state-service.md), [0004](docs/adr/0004-typed-runtime-configuration.md), [0005](docs/adr/0005-standard-error-handling.md).
+> **Branch `taskboard/state-rxjs`** — a sibling of the signal-based line, built on `taskboard/standard-error-handling`. It changes exactly one piece: `TasksStore` keeps its state in a `BehaviorSubject` and exposes observables consumed with the `async` pipe. Decisions: [ADR 0001](docs/adr/0001-upgrade-angular-17-to-22.md), [0002](docs/adr/0002-feature-based-layered-structure.md), [0003](docs/adr/0003-signal-based-state-service.md) (superseded), [0004](docs/adr/0004-typed-runtime-configuration.md), [0005](docs/adr/0005-standard-error-handling.md), [0006](docs/adr/0006-rxjs-state-service.md).
 
 ## Requirements
 
@@ -18,7 +18,7 @@ src/
 │   │   └── errors/            AppError, GlobalErrorHandler, ErrorNotifier, banner
 │   └── features/tasks/
 │       ├── domain/            Task, title rules, TaskRepository port
-│       ├── application/       TasksStore (signals), task error mapper
+│       ├── application/       TasksStore (RxJS), task error mapper
 │       ├── infrastructure/    InMemoryTaskRepository
 │       └── presentation/      page, form and list components
 └── environments/              typed production and development settings
