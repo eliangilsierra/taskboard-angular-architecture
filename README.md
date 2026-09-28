@@ -1,6 +1,6 @@
 # Prueba
 
-> **Branch `taskboard/layered-structure`** — builds on `taskboard/upgrade-angular-latest` (Angular 22). It replaces the placeholder with a feature-based, layered structure and a small reference feature: a task board with an in-memory repository. Decisions: [ADR 0001](docs/adr/0001-upgrade-angular-17-to-22.md), [0002](docs/adr/0002-feature-based-layered-structure.md), [0003](docs/adr/0003-signal-based-state-service.md), [0004](docs/adr/0004-typed-runtime-configuration.md).
+> **Branch `taskboard/standard-error-handling`** — builds on `taskboard/layered-structure`. Every error, expected or not, now goes through one pipeline: `AppError` → `GlobalErrorHandler` → on-screen banner. Decisions: [ADR 0001](docs/adr/0001-upgrade-angular-17-to-22.md), [0002](docs/adr/0002-feature-based-layered-structure.md), [0003](docs/adr/0003-signal-based-state-service.md), [0004](docs/adr/0004-typed-runtime-configuration.md), [0005](docs/adr/0005-standard-error-handling.md).
 
 ## Requirements
 
@@ -13,10 +13,12 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ```text
 src/
 ├── app/
-│   ├── core/                  app-wide configuration (APP_CONFIG)
+│   ├── core/
+│   │   ├── config/            app-wide configuration (APP_CONFIG)
+│   │   └── errors/            AppError, GlobalErrorHandler, ErrorNotifier, banner
 │   └── features/tasks/
 │       ├── domain/            Task, title rules, TaskRepository port
-│       ├── application/       TasksStore (signals)
+│       ├── application/       TasksStore (signals), task error mapper
 │       ├── infrastructure/    InMemoryTaskRepository
 │       └── presentation/      page, form and list components
 └── environments/              typed production and development settings

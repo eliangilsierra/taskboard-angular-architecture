@@ -31,5 +31,5 @@ call the methods; nothing else is public.
   Every extra concern has to be designed by hand as the feature grows.
 - The public API of the store is the contract. Sibling branches keep it intact
   and change only the inside.
-- Errors coming from the repository are not handled anywhere yet; that is
-  addressed in its own branch.
+- Failures coming from the repository are handed to Angular's `ErrorHandler`
+  instead of being handled by the store itself (see ADR 0005).
