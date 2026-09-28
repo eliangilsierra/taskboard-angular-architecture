@@ -1,12 +1,28 @@
 # Prueba
 
-> **Branch `taskboard/upgrade-angular-latest`** — the only change with respect to the baseline is the framework version (Angular 17 → 22). See [ADR 0001](docs/adr/0001-upgrade-angular-17-to-22.md).
+> **Branch `taskboard/layered-structure`** — builds on `taskboard/upgrade-angular-latest` (Angular 22). It replaces the placeholder with a feature-based, layered structure and a small reference feature: a task board with an in-memory repository. Decisions: [ADR 0001](docs/adr/0001-upgrade-angular-17-to-22.md), [0002](docs/adr/0002-feature-based-layered-structure.md), [0003](docs/adr/0003-signal-based-state-service.md), [0004](docs/adr/0004-typed-runtime-configuration.md).
 
 ## Requirements
 
 - Node.js `^22.22.3`, `^24.15.0` or `>=26.0.0`
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 22.2.0.
+
+## Project structure
+
+```text
+src/
+├── app/
+│   ├── core/                  app-wide configuration (APP_CONFIG)
+│   └── features/tasks/
+│       ├── domain/            Task, title rules, TaskRepository port
+│       ├── application/       TasksStore (signals)
+│       ├── infrastructure/    InMemoryTaskRepository
+│       └── presentation/      page, form and list components
+└── environments/              typed production and development settings
+```
+
+Path aliases: `@core/*`, `@features/*`, `@env/*`.
 
 ## Development server
 
