@@ -1,57 +1,69 @@
-import { ErrorHandler, Injectable, computed, inject, signal } from '@angular/core';
+import { ErrorHandler, computed, inject } from '@angular/core';
+import { patchState, signalStore, withComputed, withHooks, withMethods, withState } from '@ngrx/signals';
 import { Observable } from 'rxjs';
 import { Task, normalizeTitle } from '../domain/task';
 import { TaskRepository } from '../domain/task.repository';
 import { toTaskAppError } from './task-errors';
 
-/** Holds the state of the task board and orchestrates the use cases. */
-@Injectable()
-export class TasksStore {
-  private readonly repository = inject(TaskRepository);
-  private readonly errorHandler = inject(ErrorHandler);
-  private readonly state = signal<readonly Task[]>([]);
-
-  readonly tasks = this.state.asReadonly();
-  readonly remaining = computed(() => this.state().filter((task) => !task.done).length);
-
-  constructor() {
-    this.run(this.repository.list(), (tasks) => this.state.set(tasks));
-  }
-
-  add(title: string): void {
-    let normalized: string;
-    try {
-      normalized = normalizeTitle(title);
-    } catch (error) {
-      this.errorHandler.handleError(toTaskAppError(error));
-      return;
-    }
-    this.run(this.repository.add(normalized), (task) => {
-      this.state.update((tasks) => [...tasks, task]);
-    });
-  }
-
-  toggle(id: string): void {
-    const current = this.state().find((task) => task.id === id);
-    if (!current) {
-      return;
-    }
-    this.run(this.repository.setDone(id, !current.done), (updated) => {
-      this.state.update((tasks) => tasks.map((task) => (task.id === id ? updated : task)));
-    });
-  }
-
-  remove(id: string): void {
-    this.run(this.repository.remove(id), () => {
-      this.state.update((tasks) => tasks.filter((task) => task.id !== id));
-    });
-  }
-
-  /** Subscribes to a repository call and sends any failure to the global error handler. */
-  private run<T>(source: Observable<T>, onSuccess: (value: T) => void): void {
-    source.subscribe({
-      next: onSuccess,
-      error: (error: unknown) => this.errorHandler.handleError(toTaskAppError(error))
-    });
-  }
+interface TasksState {
+  readonly tasks: readonly Task[];
 }
+
+/** Holds the state of the task board and orchestrates the use cases. */
+export const TasksStore = signalStore(
+  withState<TasksState>({ tasks: [] }),
+  withComputed(({ tasks }) => ({
+    remaining: computed(() => tasks().filter((task) => !task.done).length)
+  })),
+  withMethods((store, repository = inject(TaskRepository), errorHandler = inject(ErrorHandler)) => {
+    /** Subscribes to a repository call and sends any failure to the global error handler. */
+    const run = <T>(source: Observable<T>, onSuccess: (value: T) => void): void => {
+      source.subscribe({
+        next: onSuccess,
+        error: (error: unknown) => errorHandler.handleError(toTaskAppError(error))
+      });
+    };
+
+    return {
+      _load(): void {
+        run(repository.list(), (tasks) => patchState(store, { tasks }));
+      },
+
+      add(title: string): void {
+        let normalized: string;
+        try {
+          normalized = normalizeTitle(title);
+        } catch (error) {
+          errorHandler.handleError(toTaskAppError(error));
+          return;
+        }
+        run(repository.add(normalized), (task) => {
+          patchState(store, (state) => ({ tasks: [...state.tasks, task] }));
+        });
+      },
+
+      toggle(id: string): void {
+        const current = store.tasks().find((task) => task.id === id);
+        if (!current) {
+          return;
+        }
+        run(repository.setDone(id, !current.done), (updated) => {
+          patchState(store, (state) => ({
+            tasks: state.tasks.map((task) => (task.id === id ? updated : task))
+          }));
+        });
+      },
+
+      remove(id: string): void {
+        run(repository.remove(id), () => {
+          patchState(store, (state) => ({ tasks: state.tasks.filter((task) => task.id !== id) }));
+        });
+      }
+    };
+  }),
+  withHooks({
+    onInit: (store) => store._load()
+  })
+);
+
+export type TasksStore = InstanceType<typeof TasksStore>;
