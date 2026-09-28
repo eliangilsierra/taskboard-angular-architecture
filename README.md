@@ -1,6 +1,12 @@
 # Prueba
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.1.0.
+> **Branch `taskboard/upgrade-angular-latest`** — the only change with respect to the baseline is the framework version (Angular 17 → 22). See [ADR 0001](docs/adr/0001-upgrade-angular-17-to-22.md).
+
+## Requirements
+
+- Node.js `^22.22.3`, `^24.15.0` or `>=26.0.0`
+
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 22.2.0.
 
 ## Development server
 
