@@ -1,0 +1,25 @@
+.task-form {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.task-form input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.25rem;
+}
+
+.task-form button {
+  padding: 0.5rem 1rem;
+  border: 0;
+  border-radius: 0.25rem;
+  color: #fff;
+  background: var(--color-accent);
+  cursor: pointer;
+}
+
+.task-form button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

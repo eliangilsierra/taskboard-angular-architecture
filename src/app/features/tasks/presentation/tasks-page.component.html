@@ -1,0 +1,8 @@
+<h2>Tasks</h2>
+<app-task-form (submitted)="store.add($event)" />
+<app-task-list
+  [tasks]="store.tasks()"
+  (toggled)="store.toggle($event)"
+  (removed)="store.remove($event)"
+/>
+<p class="tasks-page__summary">{{ store.remaining() }} remaining</p>
