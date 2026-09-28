@@ -1,0 +1,21 @@
+:host {
+  display: block;
+}
+
+.error-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  color: #7a1c1c;
+  background: #fde8e8;
+  border-bottom: 1px solid #f5b5b5;
+}
+
+.error-banner button {
+  border: 0;
+  font-size: 1.25rem;
+  color: inherit;
+  background: none;
+  cursor: pointer;
+}

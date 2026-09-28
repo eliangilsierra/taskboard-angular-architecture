@@ -1,0 +1,6 @@
+@for (notification of notifier.notifications(); track notification.id) {
+  <div class="error-banner" role="alert">
+    <span>{{ notification.error.userMessage }}</span>
+    <button type="button" aria-label="Dismiss" (click)="notifier.dismiss(notification.id)">×</button>
+  </div>
+}
