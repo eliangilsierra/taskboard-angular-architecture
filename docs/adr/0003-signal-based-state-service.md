@@ -1,6 +1,6 @@
 # 3. Keep feature state in a signal-based service
 
-- Status: Accepted
+- Status: Superseded by [ADR 6](0006-rxjs-state-service.md) on this branch
 
 ## Context
 

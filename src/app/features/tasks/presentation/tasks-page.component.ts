@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TasksStore } from '../application/tasks.store';
 import { TaskFormComponent } from './task-form.component';
@@ -5,7 +6,7 @@ import { TaskListComponent } from './task-list.component';
 
 @Component({
   selector: 'app-tasks-page',
-  imports: [TaskFormComponent, TaskListComponent],
+  imports: [AsyncPipe, TaskFormComponent, TaskListComponent],
   templateUrl: './tasks-page.component.html',
   styleUrl: './tasks-page.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush

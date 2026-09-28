@@ -1,7 +1,7 @@
 import { ErrorHandler } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { AppError } from '@core/errors/app-error';
-import { Observable, throwError } from 'rxjs';
+import { Observable, take, throwError } from 'rxjs';
 import { Task } from '../domain/task';
 import { TaskRepository } from '../domain/task.repository';
 import { provideTasks } from '../tasks.providers';
@@ -13,6 +13,13 @@ describe('TasksStore', () => {
   beforeEach(() => {
     errorHandler = jasmine.createSpyObj<ErrorHandler>('ErrorHandler', ['handleError']);
   });
+
+  /** Reads the value a store observable holds right now. */
+  function current<T>(source: Observable<T>): T {
+    let value!: T;
+    source.pipe(take(1)).subscribe((emitted) => (value = emitted));
+    return value;
+  }
 
   function reportedErrors(): AppError[] {
     return errorHandler.handleError.calls.allArgs().map(([error]) => error as AppError);
@@ -29,44 +36,44 @@ describe('TasksStore', () => {
     });
 
     it('starts without tasks', () => {
-      expect(store.tasks()).toEqual([]);
-      expect(store.remaining()).toBe(0);
+      expect(current(store.tasks$)).toEqual([]);
+      expect(current(store.remaining$)).toBe(0);
     });
 
     it('adds a trimmed task', () => {
       store.add('  buy milk  ');
 
-      expect(store.tasks().map((task) => task.title)).toEqual(['buy milk']);
-      expect(store.remaining()).toBe(1);
+      expect(current(store.tasks$).map((task) => task.title)).toEqual(['buy milk']);
+      expect(current(store.remaining$)).toBe(1);
     });
 
     it('reports a validation error for an invalid title and keeps the state', () => {
       store.add('   ');
 
-      expect(store.tasks()).toEqual([]);
+      expect(current(store.tasks$)).toEqual([]);
       expect(reportedErrors().map((error) => error.kind)).toEqual(['validation']);
     });
 
     it('toggles a task and updates the remaining counter', () => {
       store.add('buy milk');
-      const [task] = store.tasks();
+      const [task] = current(store.tasks$);
 
       store.toggle(task.id);
-      expect(store.tasks()[0].done).toBeTrue();
-      expect(store.remaining()).toBe(0);
+      expect(current(store.tasks$)[0].done).toBeTrue();
+      expect(current(store.remaining$)).toBe(0);
 
       store.toggle(task.id);
-      expect(store.tasks()[0].done).toBeFalse();
-      expect(store.remaining()).toBe(1);
+      expect(current(store.tasks$)[0].done).toBeFalse();
+      expect(current(store.remaining$)).toBe(1);
     });
 
     it('removes a task', () => {
       store.add('buy milk');
-      const [task] = store.tasks();
+      const [task] = current(store.tasks$);
 
       store.remove(task.id);
 
-      expect(store.tasks()).toEqual([]);
+      expect(current(store.tasks$)).toEqual([]);
       expect(errorHandler.handleError).not.toHaveBeenCalled();
     });
 
@@ -107,7 +114,7 @@ describe('TasksStore', () => {
     });
 
     it('reports the failure of the initial load and stays empty', () => {
-      expect(store.tasks()).toEqual([]);
+      expect(current(store.tasks$)).toEqual([]);
       expect(reportedErrors().map((error) => error.kind)).toEqual(['unexpected']);
     });
 
@@ -116,7 +123,7 @@ describe('TasksStore', () => {
 
       store.add('buy milk');
 
-      expect(store.tasks()).toEqual([]);
+      expect(current(store.tasks$)).toEqual([]);
       expect(reportedErrors().map((error) => error.kind)).toEqual(['unexpected']);
     });
   });
