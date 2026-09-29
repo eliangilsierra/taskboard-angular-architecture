@@ -1,6 +1,6 @@
 # Prueba
 
-> **Branch `taskboard/standard-error-handling`** — builds on `taskboard/layered-structure`. Every error, expected or not, now goes through one pipeline: `AppError` → `GlobalErrorHandler` → on-screen banner. Decisions: [ADR 0001](docs/adr/0001-upgrade-angular-17-to-22.md), [0002](docs/adr/0002-feature-based-layered-structure.md), [0003](docs/adr/0003-signal-based-state-service.md), [0004](docs/adr/0004-typed-runtime-configuration.md), [0005](docs/adr/0005-standard-error-handling.md).
+> **Branch `taskboard/hardened-container`** — builds on `taskboard/standard-error-handling`. It replaces the inherited Dockerfile with a multi-stage build that serves the production bundle from an unprivileged nginx image. Decisions: [ADR 0001](docs/adr/0001-upgrade-angular-17-to-22.md), [0002](docs/adr/0002-feature-based-layered-structure.md), [0003](docs/adr/0003-signal-based-state-service.md), [0004](docs/adr/0004-typed-runtime-configuration.md), [0005](docs/adr/0005-standard-error-handling.md), [0006](docs/adr/0006-hardened-container-image.md).
 
 ## Requirements
 
@@ -25,6 +25,20 @@ src/
 ```
 
 Path aliases: `@core/*`, `@features/*`, `@env/*`.
+
+## Running in a container
+
+```bash
+docker compose up --build
+```
+
+The application is served on <http://localhost:8080> and the health check on `/healthz`. Without Compose:
+
+```bash
+docker build -t taskboard-web .
+docker run --rm -p 8080:8080 --read-only --tmpfs /tmp --cap-drop ALL \
+  --security-opt no-new-privileges:true taskboard-web
+```
 
 ## Development server
 
