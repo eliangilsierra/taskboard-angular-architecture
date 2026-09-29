@@ -53,6 +53,14 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
+## Code quality
+
+```bash
+npm run lint          # ESLint, including the layer boundary rules
+npm run format        # rewrite files with Prettier
+npm run format:check  # verify formatting without changing files
+```
+
 ## Running unit tests
 
 Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).

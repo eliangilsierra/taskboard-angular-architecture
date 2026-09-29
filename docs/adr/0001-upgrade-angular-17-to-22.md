@@ -1,6 +1,6 @@
 # 1. Upgrade Angular 17 to 22
 
-- Status: Accepted
+- Status: Accepted (the `Eager` pin on `AppComponent` was later replaced by `OnPush`, see [ADR 8](0008-linting-formatting-and-layer-boundaries.md))
 
 ## Context
 
