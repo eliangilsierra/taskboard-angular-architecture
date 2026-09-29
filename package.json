@@ -7,6 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "test:ci": "ng test --watch=false --browsers=ChromeHeadlessCI --reporters=progress",
     "e2e": "playwright test",
     "e2e:container": "bash scripts/e2e-container.sh",
     "lint": "ng lint",
