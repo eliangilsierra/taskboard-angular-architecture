@@ -1,0 +1,30 @@
+name: Bug report
+description: Something does not work as expected
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Include what you expected to happen instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Go to ...
+        2. Click on ...
+    validations:
+      required: true
+  - type: input
+    id: reference
+    attributes:
+      label: Error reference
+      description: The code shown in the error banner, if any (for example `ab12cd34`).
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Browser and version, and how the application was started.
