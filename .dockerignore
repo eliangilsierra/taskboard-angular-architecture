@@ -1,0 +1,10 @@
+.angular
+.git
+.github
+.vscode
+dist
+docs
+node_modules
+Dockerfile
+docker-compose.yml
+.dockerignore
