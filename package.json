@@ -8,7 +8,10 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "e2e": "playwright test",
-    "e2e:container": "bash scripts/e2e-container.sh"
+    "e2e:container": "bash scripts/e2e-container.sh",
+    "lint": "ng lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "private": true,
   "engines": {
@@ -31,8 +34,11 @@
     "@angular-devkit/build-angular": "^22.2.0",
     "@angular/cli": "^22.2.0",
     "@angular/compiler-cli": "^22.2.0",
+    "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.63.0",
     "@types/jasmine": "~5.1.0",
+    "angular-eslint": "22.5.0",
+    "eslint": "^10.9.1",
     "istanbul-lib-instrument": "^6.0.3",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
@@ -40,6 +46,8 @@
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
-    "typescript": "~6.0.3"
+    "prettier": "^3.9.9",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "8.69.0"
   }
 }
