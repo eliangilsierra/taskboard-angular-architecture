@@ -1,6 +1,6 @@
 # 6. Ship a multi-stage, unprivileged nginx image
 
-- Status: Accepted
+- Status: Accepted (the missing `script-src` was later added at build time, see [ADR 12](0012-content-security-policy.md))
 
 ## Context
 
@@ -49,9 +49,8 @@ The Dockerfile inherited from the scaffold had several problems:
 
 ## Consequences
 
-- The `script-src` and `style-src` directives are still missing. The right fix
-  is in the build (Angular's `autoCsp` option generates hashes for the inline
-  script), not in the server, and it deserves its own change.
+- The `style-src` directive is still missing, and `script-src` is provided by
+  the build rather than by the server ([ADR 12](0012-content-security-policy.md)).
 - The image tags (`node:24-alpine`, `nginx-unprivileged:1.31-alpine`) float
   within a release line. Rebuilds are not bit-for-bit reproducible, and pinning
   digests needs automation to stay current.
