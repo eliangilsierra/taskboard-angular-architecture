@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideStore } from '@ngrx/store';
 import { provideTasks } from '../tasks.providers';
 import { TasksPageComponent } from './tasks-page.component';
 
@@ -9,7 +10,7 @@ describe('TasksPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [TasksPageComponent],
-      providers: provideTasks()
+      providers: [provideStore(), provideTasks()]
     }).compileComponents();
     fixture = TestBed.createComponent(TasksPageComponent);
     element = fixture.nativeElement as HTMLElement;

@@ -1,57 +1,32 @@
-import { ErrorHandler, Injectable, computed, inject, signal } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Task, normalizeTitle } from '../domain/task';
-import { TaskRepository } from '../domain/task.repository';
-import { toTaskAppError } from './task-errors';
+import { Injectable, inject } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { tasksActions } from './tasks.actions';
+import { tasksFeature } from './tasks.reducer';
 
-/** Holds the state of the task board and orchestrates the use cases. */
+/** Facade over the NgRx store: the rest of the feature never sees actions or selectors. */
 @Injectable()
 export class TasksStore {
-  private readonly repository = inject(TaskRepository);
-  private readonly errorHandler = inject(ErrorHandler);
-  private readonly state = signal<readonly Task[]>([]);
+  private readonly store = inject(Store);
 
-  readonly tasks = this.state.asReadonly();
-  readonly remaining = computed(() => this.state().filter((task) => !task.done).length);
+  readonly tasks = this.store.selectSignal(tasksFeature.selectTasks);
+  readonly remaining = this.store.selectSignal(tasksFeature.selectRemaining);
 
   constructor() {
-    this.run(this.repository.list(), (tasks) => this.state.set(tasks));
+    this.store.dispatch(tasksActions.load());
   }
 
   add(title: string): void {
-    let normalized: string;
-    try {
-      normalized = normalizeTitle(title);
-    } catch (error) {
-      this.errorHandler.handleError(toTaskAppError(error));
-      return;
-    }
-    this.run(this.repository.add(normalized), (task) => {
-      this.state.update((tasks) => [...tasks, task]);
-    });
+    this.store.dispatch(tasksActions.add({ title }));
   }
 
   toggle(id: string): void {
-    const current = this.state().find((task) => task.id === id);
-    if (!current) {
-      return;
+    const current = this.tasks().find((task) => task.id === id);
+    if (current) {
+      this.store.dispatch(tasksActions.toggle({ id, done: !current.done }));
     }
-    this.run(this.repository.setDone(id, !current.done), (updated) => {
-      this.state.update((tasks) => tasks.map((task) => (task.id === id ? updated : task)));
-    });
   }
 
   remove(id: string): void {
-    this.run(this.repository.remove(id), () => {
-      this.state.update((tasks) => tasks.filter((task) => task.id !== id));
-    });
-  }
-
-  /** Subscribes to a repository call and sends any failure to the global error handler. */
-  private run<T>(source: Observable<T>, onSuccess: (value: T) => void): void {
-    source.subscribe({
-      next: onSuccess,
-      error: (error: unknown) => this.errorHandler.handleError(toTaskAppError(error))
-    });
+    this.store.dispatch(tasksActions.remove({ id }));
   }
 }

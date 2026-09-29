@@ -1,6 +1,7 @@
 import { ErrorHandler } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { AppError } from '@core/errors/app-error';
+import { provideStore } from '@ngrx/store';
 import { Observable, throwError } from 'rxjs';
 import { Task } from '../domain/task';
 import { TaskRepository } from '../domain/task.repository';
@@ -23,7 +24,7 @@ describe('TasksStore', () => {
 
     beforeEach(() => {
       TestBed.configureTestingModule({
-        providers: [provideTasks(), { provide: ErrorHandler, useValue: errorHandler }]
+        providers: [provideStore(), provideTasks(), { provide: ErrorHandler, useValue: errorHandler }]
       });
       store = TestBed.inject(TasksStore);
     });
@@ -98,7 +99,8 @@ describe('TasksStore', () => {
     beforeEach(() => {
       TestBed.configureTestingModule({
         providers: [
-          TasksStore,
+          provideStore(),
+          provideTasks(),
           { provide: TaskRepository, useClass: FailingTaskRepository },
           { provide: ErrorHandler, useValue: errorHandler }
         ]

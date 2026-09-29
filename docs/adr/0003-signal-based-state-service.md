@@ -1,6 +1,6 @@
 # 3. Keep feature state in a signal-based service
 
-- Status: Accepted
+- Status: Superseded by [ADR 6](0006-ngrx-store-state.md) on this branch
 
 ## Context
 
