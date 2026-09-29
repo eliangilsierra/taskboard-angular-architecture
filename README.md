@@ -6,6 +6,24 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 22.2.0.
 
+## Project structure
+
+```text
+src/
+├── app/
+│   ├── core/
+│   │   ├── config/            app-wide configuration (APP_CONFIG)
+│   │   └── errors/            AppError, GlobalErrorHandler, ErrorNotifier, banner
+│   └── features/tasks/
+│       ├── domain/            Task, title rules, TaskRepository port
+│       ├── application/       TasksStore (signals), task error mapper
+│       ├── infrastructure/    InMemoryTaskRepository
+│       └── presentation/      page, form and list components
+└── environments/              typed production and development settings
+```
+
+Path aliases: `@core/*`, `@features/*`, `@env/*`.
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
