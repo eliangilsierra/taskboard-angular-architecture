@@ -13,14 +13,16 @@ src/
 ├── app/
 │   ├── core/
 │   │   ├── config/            app-wide configuration (APP_CONFIG)
-│   │   └── errors/            AppError, GlobalErrorHandler, ErrorNotifier, banner
+│   │   ├── errors/            AppError, GlobalErrorHandler, ErrorNotifier, banner
+│   │   └── logging/           Logger port and console adapter
 │   └── features/tasks/
 │       ├── domain/            Task, title rules, TaskRepository port
 │       ├── application/       TasksStore (signals), task error mapper
-│       ├── infrastructure/    InMemoryTaskRepository
+│       ├── infrastructure/    InMemoryTaskRepository, ResilientTaskRepository
 │       └── presentation/      page, form and list components
 └── environments/              typed production and development settings
 docker/                        nginx configuration for the production image
+.github/                       CI workflow, Dependabot, issue and pull request templates
 e2e/                           Playwright specs and page objects
 scripts/                       helper scripts (end-to-end run in a container)
 ```
@@ -61,9 +63,11 @@ npm run format        # rewrite files with Prettier
 npm run format:check  # verify formatting without changing files
 ```
 
+The same checks run on every pull request through GitHub Actions. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io), or `npm run test:ci` for a single headless run.
 
 ## Running end-to-end tests
 
