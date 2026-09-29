@@ -86,3 +86,23 @@ test.describe('routing', () => {
     expect(response.status()).toBe(404);
   });
 });
+
+test.describe('browser health', () => {
+  test('runs without console errors or content security policy violations', async ({ page }) => {
+    const problems: string[] = [];
+    page.on('console', (message) => {
+      if (message.type() === 'error' || message.type() === 'warning') {
+        problems.push(message.text());
+      }
+    });
+    page.on('pageerror', (error) => problems.push(error.message));
+
+    const tasks = new TasksPage(page);
+    await tasks.open();
+    await tasks.add('check the console');
+    await tasks.checkbox('check the console').check();
+    await tasks.remove('check the console');
+
+    expect(problems).toEqual([]);
+  });
+});
