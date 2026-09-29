@@ -1,6 +1,6 @@
 # Prueba
 
-> **Branch `taskboard/standard-error-handling`** — builds on `taskboard/layered-structure`. Every error, expected or not, now goes through one pipeline: `AppError` → `GlobalErrorHandler` → on-screen banner. Decisions: [ADR 0001](docs/adr/0001-upgrade-angular-17-to-22.md), [0002](docs/adr/0002-feature-based-layered-structure.md), [0003](docs/adr/0003-signal-based-state-service.md), [0004](docs/adr/0004-typed-runtime-configuration.md), [0005](docs/adr/0005-standard-error-handling.md).
+> **Branch `taskboard/e2e-playwright-container`** — builds on `taskboard/standard-error-handling`. It adds Playwright end-to-end tests that run against the production build served from a container. Decisions: [ADR 0001](docs/adr/0001-upgrade-angular-17-to-22.md), [0002](docs/adr/0002-feature-based-layered-structure.md), [0003](docs/adr/0003-signal-based-state-service.md), [0004](docs/adr/0004-typed-runtime-configuration.md), [0005](docs/adr/0005-standard-error-handling.md), [0006](docs/adr/0006-e2e-tests-against-container.md).
 
 ## Requirements
 
@@ -44,7 +44,23 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 ## Running end-to-end tests
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+The end-to-end tests use [Playwright](https://playwright.dev) and target the production build, not the dev server. Download the browser once:
+
+```bash
+npx playwright install chromium
+```
+
+Then either let the script build the image, start the container, run the suite and tear everything down:
+
+```bash
+npm run e2e:container
+```
+
+or run the suite against any deployment that is already up (default `http://localhost:8080`):
+
+```bash
+E2E_BASE_URL=https://staging.example.com npm run e2e
+```
 
 ## Further help
 
