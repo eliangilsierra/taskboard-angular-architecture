@@ -9,7 +9,10 @@ describe('AppComponent', () => {
       imports: [AppComponent],
       providers: [
         provideRouter([]),
-        { provide: APP_CONFIG, useValue: { appName: 'Test Board', production: false } }
+        {
+          provide: APP_CONFIG,
+          useValue: { appName: 'Test Board', production: false, logLevel: 'error' }
+        }
       ]
     }).compileComponents();
   });
