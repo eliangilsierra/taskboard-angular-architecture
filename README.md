@@ -133,3 +133,7 @@ The three state-management branches each add their own ADR 6 describing their va
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+[MIT](LICENSE) © 2026 Elian Gil Sierra
