@@ -20,9 +20,26 @@ src/
 │       ├── infrastructure/    InMemoryTaskRepository
 │       └── presentation/      page, form and list components
 └── environments/              typed production and development settings
+docker/                        nginx configuration for the production image
+e2e/                           Playwright specs and page objects
+scripts/                       helper scripts (end-to-end run in a container)
 ```
 
 Path aliases: `@core/*`, `@features/*`, `@env/*`.
+
+## Running in a container
+
+```bash
+docker compose up --build
+```
+
+The application is served on <http://localhost:8080> and the health check on `/healthz`. Without Compose:
+
+```bash
+docker build -t taskboard-web .
+docker run --rm -p 8080:8080 --read-only --tmpfs /tmp --cap-drop ALL \
+  --security-opt no-new-privileges:true taskboard-web
+```
 
 ## Development server
 
@@ -42,7 +59,23 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 ## Running end-to-end tests
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+The end-to-end tests use [Playwright](https://playwright.dev) and target the production image, not the dev server. Download the browser once:
+
+```bash
+npx playwright install chromium
+```
+
+Then either let the script build the image, start the container, run the suite and tear everything down:
+
+```bash
+npm run e2e:container
+```
+
+or run the suite against any deployment that is already up (default `http://localhost:8080`):
+
+```bash
+E2E_BASE_URL=https://staging.example.com npm run e2e
+```
 
 ## Further help
 
