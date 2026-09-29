@@ -5,7 +5,11 @@
         <input type="checkbox" [checked]="task.done" (change)="toggled.emit(task.id)" />
         <span>{{ task.title }}</span>
       </label>
-      <button type="button" [attr.aria-label]="'Remove ' + task.title" (click)="removed.emit(task.id)">
+      <button
+        type="button"
+        [attr.aria-label]="'Remove ' + task.title"
+        (click)="removed.emit(task.id)"
+      >
         Remove
       </button>
     </li>
