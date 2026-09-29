@@ -19,3 +19,8 @@
   background: none;
   cursor: pointer;
 }
+
+.error-banner__reference {
+  margin-left: 0.5rem;
+  opacity: 0.8;
+}

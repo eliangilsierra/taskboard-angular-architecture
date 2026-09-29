@@ -24,6 +24,7 @@ describe('GlobalErrorHandler', () => {
 
     expect(notifier.notifications().map((n) => n.error.userMessage)).toEqual(['Title is required']);
     expect(logger.info).toHaveBeenCalledOnceWith('Handled error', {
+      errorId: jasmine.stringMatching(/^[a-z0-9]{8}$/),
       kind: 'validation',
       message: 'Title is required'
     });
@@ -35,7 +36,8 @@ describe('GlobalErrorHandler', () => {
 
     handler.handleError(cause);
 
-    expect(logger.error).toHaveBeenCalledOnceWith('Unexpected error', { cause });
-    expect(notifier.notifications()[0].error.userMessage).toBe(UNEXPECTED_ERROR_MESSAGE);
+    const shown = notifier.notifications()[0].error;
+    expect(shown.userMessage).toBe(UNEXPECTED_ERROR_MESSAGE);
+    expect(logger.error).toHaveBeenCalledOnceWith('Unexpected error', { errorId: shown.id, cause });
   });
 });

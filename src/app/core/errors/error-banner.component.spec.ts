@@ -21,4 +21,19 @@ describe('ErrorBannerComponent', () => {
     fixture.detectChanges();
     expect(element.querySelector('[role="alert"]')).toBeNull();
   });
+
+  it('shows the reference of unexpected errors only', () => {
+    const fixture = TestBed.createComponent(ErrorBannerComponent);
+    const notifier = TestBed.inject(ErrorNotifier);
+    const element = fixture.nativeElement as HTMLElement;
+    const unexpected = new AppError('unexpected', 'Something went wrong.');
+
+    notifier.report(new AppError('validation', 'Title is required'));
+    fixture.detectChanges();
+    expect(element.textContent).not.toContain('Reference');
+
+    notifier.report(unexpected);
+    fixture.detectChanges();
+    expect(element.textContent).toContain(`Reference: ${unexpected.id}`);
+  });
 });

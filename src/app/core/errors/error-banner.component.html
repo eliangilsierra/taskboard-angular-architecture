@@ -1,6 +1,11 @@
 @for (notification of notifier.notifications(); track notification.id) {
   <div class="error-banner" role="alert">
-    <span>{{ notification.error.userMessage }}</span>
+    <span>
+      {{ notification.error.userMessage }}
+      @if (notification.error.kind === 'unexpected') {
+        <small class="error-banner__reference">Reference: {{ notification.error.id }}</small>
+      }
+    </span>
     <button type="button" aria-label="Dismiss" (click)="notifier.dismiss(notification.id)">
       ×
     </button>

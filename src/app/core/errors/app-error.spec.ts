@@ -1,4 +1,4 @@
-import { AppError, UNEXPECTED_ERROR_MESSAGE, toAppError } from './app-error';
+import { AppError, UNEXPECTED_ERROR_MESSAGE, createErrorId, toAppError } from './app-error';
 
 describe('toAppError', () => {
   it('returns application errors as they are', () => {
@@ -18,5 +18,26 @@ describe('toAppError', () => {
 
   it('wraps values that are not errors', () => {
     expect(toAppError('a string').kind).toBe('unexpected');
+  });
+});
+
+describe('error references', () => {
+  it('has a fixed length and only lowercase letters and digits', () => {
+    for (let i = 0; i < 50; i++) {
+      expect(createErrorId()).toMatch(/^[a-z0-9]{8}$/);
+    }
+  });
+
+  it('gives every error its own reference', () => {
+    const first = new AppError('unexpected', 'a');
+    const second = new AppError('unexpected', 'b');
+
+    expect(first.id).toMatch(/^[a-z0-9]{8}$/);
+    expect(first.id).not.toBe(second.id);
+  });
+
+  it('keeps the reference when an error is converted again', () => {
+    const original = new AppError('not-found', 'gone');
+    expect(toAppError(original).id).toBe(original.id);
   });
 });

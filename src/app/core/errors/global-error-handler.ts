@@ -15,9 +15,16 @@ export class GlobalErrorHandler implements ErrorHandler {
   handleError(error: unknown): void {
     const appError = toAppError(error);
     if (appError.kind === 'unexpected') {
-      this.logger.error('Unexpected error', { cause: appError.cause ?? appError });
+      this.logger.error('Unexpected error', {
+        errorId: appError.id,
+        cause: appError.cause ?? appError
+      });
     } else {
-      this.logger.info('Handled error', { kind: appError.kind, message: appError.userMessage });
+      this.logger.info('Handled error', {
+        errorId: appError.id,
+        kind: appError.kind,
+        message: appError.userMessage
+      });
     }
     this.notifier.report(appError);
   }
